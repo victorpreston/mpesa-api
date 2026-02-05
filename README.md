@@ -15,11 +15,9 @@ This REST API enables businesses to:
 
 ```mermaid
 graph TD
-    A["Safaricom Daraja<br/>(Sandbox API)"] -->|Real Callbacks| B["Spring Boot REST API<br/>(Deployed)"]
-    B -->|Callback Reception| B
-    B -->|Query Transactions| B
-    B -->|Health Check| B
-    B -->|Admin Endpoints| B
+    A["Safaricom Daraja<br/>(Sandbox API)"] -->|Real M-Pesa Callbacks| B["Spring Boot REST API<br/>(Deployed)"]
+    D["Admin Client<br/>(Internal)"] -->|Register URLs / Simulate| B
+    E["Query Client<br/>(External)"] -->|Query Transactions| B
     B -->|Persist Data| C["PostgreSQL<br/>(mpesa_transactions)"]
     C -->|Query Results| B
 ```
