@@ -2,24 +2,50 @@ package com.grainindustries.mpesa_c2b_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MpesaCallbackRequest {
     
+    @JsonProperty("TransID")
     private String transactionId;
+    
+    @JsonProperty("TransactionType")
     private String transactionType;
+    
+    @JsonProperty("TransAmount")
     private String transAmount;
+    
+    @JsonProperty("TransTime")
     private String transTime;
+    
+    @JsonProperty("BusinessShortCode")
     private String businessShortcode;
+    
+    @JsonProperty("BillRefNumber")
     private String billRefNumber;
+    
+    @JsonProperty("InvoiceNumber")
     private String invoiceNumber;
+    
+    @JsonProperty("MSISDN")
     private String msisdn;
+    
+    @JsonProperty("FirstName")
     private String firstName;
+    
+    @JsonProperty("MiddleName")
     private String middleName;
+    
+    @JsonProperty("LastName")
     private String lastName;
+    
+    @JsonProperty("OrgAccountBalance")
     private String orgAccountBalance;
+    
+    @JsonProperty("ThirdPartyTransID")
     private String thirdPartyTransId;
     
     private Map<String, Object> additionalFields = new HashMap<>();

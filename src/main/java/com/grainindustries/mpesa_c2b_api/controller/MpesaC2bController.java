@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/mpesa/c2b")
 @CrossOrigin(origins = "*")
 public class MpesaC2bController {
     
@@ -28,7 +27,7 @@ public class MpesaC2bController {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @PostMapping("/callback")
+    @PostMapping({"/api/v1/mpesa/c2b/callback", "/api/v1/callback"})
     public ResponseEntity<MpesaCallbackResponse> handleCallback(@RequestBody String payload) {
         try {
             logger.info("Received C2B callback");
@@ -52,7 +51,7 @@ public class MpesaC2bController {
         }
     }
     
-    @GetMapping("/transaction/{transactionId}")
+    @GetMapping("/api/v1/mpesa/c2b/transaction/{transactionId}")
     public ResponseEntity<?> getTransaction(@PathVariable String transactionId) {
         logger.debug("Fetching transaction: {}", transactionId);
         Optional<MpesaTransaction> transaction = mpesaTransactionService.getTransactionById(transactionId);
@@ -68,7 +67,7 @@ public class MpesaC2bController {
         }
     }
     
-    @GetMapping("/msisdn/{msisdn}")
+    @GetMapping("/api/v1/mpesa/c2b/msisdn/{msisdn}")
     public ResponseEntity<?> getTransactionsByMsisdn(@PathVariable String msisdn) {
         logger.debug("Fetching transactions for MSISDN: {}", msisdn);
         List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByPhoneNumber(msisdn);
@@ -82,7 +81,7 @@ public class MpesaC2bController {
         }
     }
     
-    @GetMapping("/shortcode/{shortcode}")
+    @GetMapping("/api/v1/mpesa/c2b/shortcode/{shortcode}")
     public ResponseEntity<?> getTransactionsByShortcode(@PathVariable String shortcode) {
         logger.debug("Fetching transactions for shortcode: {}", shortcode);
         List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByBusinessShortcode(shortcode);
@@ -98,7 +97,7 @@ public class MpesaC2bController {
         }
     }
     
-    @GetMapping("/all")
+    @GetMapping("/api/v1/mpesa/c2b/all")
     public ResponseEntity<?> getAllTransactions() {
         logger.debug("Fetching all transactions");
         List<MpesaTransaction> transactions = mpesaTransactionService.getAllTransactions();
@@ -106,7 +105,7 @@ public class MpesaC2bController {
         return ResponseEntity.ok(transactions);
     }
     
-    @GetMapping("/health")
+    @GetMapping("/api/v1/mpesa/c2b/health")
     public ResponseEntity<?> health() {
         logger.debug("Health check requested");
         return ResponseEntity.ok(new MpesaCallbackResponse("0", "OK", "M-Pesa C2B API is running"));

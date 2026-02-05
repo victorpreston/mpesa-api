@@ -16,7 +16,7 @@ public class MpesaTransaction {
     @Column(name = "transaction_id", unique = true, nullable = false)
     private String transactionId;
     
-    @Column(name = "transaction_type")
+    @Column(name = "transaction_type", length = 50)
     private String transactionType;
     
     @Column(name = "trans_amount", nullable = false)
