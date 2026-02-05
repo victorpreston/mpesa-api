@@ -34,3 +34,8 @@ build/
 PROJECT_STRUCTURE.md
 schema.dbml
 DARAJA_INTEGRATION_REQUIREMENTS.md
+
+application-dev.properties
+application-prod.properties
+*.env
+.env
