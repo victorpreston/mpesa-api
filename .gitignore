@@ -32,3 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 PROJECT_STRUCTURE.md
+schema.dbml
+DARAJA_INTEGRATION_REQUIREMENTS.md

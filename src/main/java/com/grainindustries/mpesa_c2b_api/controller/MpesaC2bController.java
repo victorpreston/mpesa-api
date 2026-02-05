@@ -44,7 +44,7 @@ public class MpesaC2bController {
     
     @GetMapping("/transaction/{transactionId}")
     public ResponseEntity<?> getTransaction(@PathVariable String transactionId) {
-        Optional<MpesaTransaction> transaction = mpesaTransactionService.getTransactionByTransactionId(transactionId);
+        Optional<MpesaTransaction> transaction = mpesaTransactionService.getTransactionById(transactionId);
         
         if (transaction.isPresent()) {
             return ResponseEntity.ok(transaction.get());
@@ -55,9 +55,9 @@ public class MpesaC2bController {
         }
     }
     
-    @GetMapping("/phone/{phoneNumber}")
-    public ResponseEntity<?> getTransactionsByPhone(@PathVariable String phoneNumber) {
-        List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByPhoneNumber(phoneNumber);
+    @GetMapping("/msisdn/{msisdn}")
+    public ResponseEntity<?> getTransactionsByMsisdn(@PathVariable String msisdn) {
+        List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByPhoneNumber(msisdn);
         
         if (!transactions.isEmpty()) {
             return ResponseEntity.ok(transactions);

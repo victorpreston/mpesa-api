@@ -9,22 +9,18 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface MpesaTransactionRepository extends JpaRepository<MpesaTransaction, Long> {
+public interface MpesaTransactionRepository extends JpaRepository<MpesaTransaction, UUID> {
     
     Optional<MpesaTransaction> findByTransactionId(String transactionId);
     
-    Optional<MpesaTransaction> findByMpesaReceiptNumber(String mpesaReceiptNumber);
-    
-    List<MpesaTransaction> findByPhoneNumber(String phoneNumber);
+    List<MpesaTransaction> findByMsisdn(String msisdn);
     
     List<MpesaTransaction> findByBusinessShortcode(String businessShortcode);
     
     @Query("SELECT m FROM MpesaTransaction m WHERE m.createdAt BETWEEN :startDate AND :endDate")
     List<MpesaTransaction> findByDateRange(@Param("startDate") LocalDateTime startDate, 
                                            @Param("endDate") LocalDateTime endDate);
-    
-    @Query("SELECT m FROM MpesaTransaction m WHERE m.resultCode = :resultCode")
-    List<MpesaTransaction> findByResultCode(@Param("resultCode") String resultCode);
 }

@@ -52,40 +52,33 @@ public class MpesaTransactionService {
         MpesaTransaction transaction = new MpesaTransaction();
         
         transaction.setTransactionId(request.getTransactionId());
+        transaction.setTransactionType(request.getTransactionType());
         transaction.setTransAmount(request.getTransAmount());
         transaction.setTransTime(request.getTransTime());
-        transaction.setPhoneNumber(request.getPhoneNumber());
-        transaction.setMpesaReceiptNumber(request.getMpesaReceiptNumber());
         transaction.setBusinessShortcode(request.getBusinessShortcode());
-        transaction.setResultCode(request.getResultCode());
-        transaction.setResultDescription(request.getResultDescription());
-        transaction.setMerchantRequestId(request.getMerchantRequestId());
-        transaction.setCheckoutRequestId(request.getCheckoutRequestId());
-        transaction.setOrganizationBalance(request.getOrganizationBalance());
+        transaction.setBillRefNumber(request.getBillRefNumber());
+        transaction.setInvoiceNumber(request.getInvoiceNumber());
+        transaction.setMsisdn(request.getMsisdn());
+        transaction.setFirstName(request.getFirstName());
+        transaction.setMiddleName(request.getMiddleName());
+        transaction.setLastName(request.getLastName());
+        transaction.setOrgAccountBalance(request.getOrgAccountBalance());
         transaction.setThirdPartyTransId(request.getThirdPartyTransId());
         transaction.setRawPayload(rawPayload);
         
         return transaction;
     }
     
-    public Optional<MpesaTransaction> getTransactionById(Long id) {
-        return mpesaTransactionRepository.findById(id);
-    }
-    
-    public Optional<MpesaTransaction> getTransactionByTransactionId(String transactionId) {
+    public Optional<MpesaTransaction> getTransactionById(String transactionId) {
         return mpesaTransactionRepository.findByTransactionId(transactionId);
     }
     
-    public List<MpesaTransaction> getTransactionsByPhoneNumber(String phoneNumber) {
-        return mpesaTransactionRepository.findByPhoneNumber(phoneNumber);
+    public List<MpesaTransaction> getTransactionsByPhoneNumber(String msisdn) {
+        return mpesaTransactionRepository.findByMsisdn(msisdn);
     }
     
     public List<MpesaTransaction> getTransactionsByBusinessShortcode(String shortcode) {
         return mpesaTransactionRepository.findByBusinessShortcode(shortcode);
-    }
-    
-    public List<MpesaTransaction> getTransactionsByResultCode(String resultCode) {
-        return mpesaTransactionRepository.findByResultCode(resultCode);
     }
     
     public List<MpesaTransaction> getAllTransactions() {

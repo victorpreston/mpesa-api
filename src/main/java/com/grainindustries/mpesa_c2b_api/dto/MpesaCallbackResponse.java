@@ -1,11 +1,13 @@
 package com.grainindustries.mpesa_c2b_api.dto;
 
+import java.util.UUID;
+
 public class MpesaCallbackResponse {
     
     private String resultCode;
     private String resultDescription;
     private String message;
-    private Long transactionId;
+    private UUID transactionId;
     private Long timestamp;
     
     public MpesaCallbackResponse() {}
@@ -17,7 +19,7 @@ public class MpesaCallbackResponse {
         this.timestamp = System.currentTimeMillis();
     }
     
-    public MpesaCallbackResponse(String resultCode, String resultDescription, String message, Long transactionId) {
+    public MpesaCallbackResponse(String resultCode, String resultDescription, String message, UUID transactionId) {
         this(resultCode, resultDescription, message);
         this.transactionId = transactionId;
     }
@@ -46,11 +48,11 @@ public class MpesaCallbackResponse {
         this.message = message;
     }
     
-    public Long getTransactionId() {
+    public UUID getTransactionId() {
         return transactionId;
     }
     
-    public void setTransactionId(Long transactionId) {
+    public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
     }
     

@@ -2,17 +2,22 @@ package com.grainindustries.mpesa_c2b_api.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "mpesa_transactions")
 public class MpesaTransaction {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid")
+    private UUID id;
     
     @Column(name = "transaction_id", unique = true, nullable = false)
     private String transactionId;
+    
+    @Column(name = "transaction_type")
+    private String transactionType;
     
     @Column(name = "trans_amount", nullable = false)
     private String transAmount;
@@ -20,29 +25,29 @@ public class MpesaTransaction {
     @Column(name = "trans_time", nullable = false)
     private String transTime;
     
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
-    
-    @Column(name = "mpesa_receipt_number")
-    private String mpesaReceiptNumber;
-    
-    @Column(name = "business_shortcode")
+    @Column(name = "business_shortcode", nullable = false)
     private String businessShortcode;
     
-    @Column(name = "result_code")
-    private String resultCode;
+    @Column(name = "bill_ref_number")
+    private String billRefNumber;
     
-    @Column(name = "result_description")
-    private String resultDescription;
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
     
-    @Column(name = "merchant_request_id")
-    private String merchantRequestId;
+    @Column(name = "msisdn", nullable = false)
+    private String msisdn;
     
-    @Column(name = "checkout_request_id")
-    private String checkoutRequestId;
+    @Column(name = "first_name")
+    private String firstName;
     
-    @Column(name = "organization_balance")
-    private String organizationBalance;
+    @Column(name = "middle_name")
+    private String middleName;
+    
+    @Column(name = "last_name")
+    private String lastName;
+    
+    @Column(name = "org_account_balance")
+    private String orgAccountBalance;
     
     @Column(name = "third_party_trans_id")
     private String thirdPartyTransId;
@@ -69,11 +74,11 @@ public class MpesaTransaction {
     
     public MpesaTransaction() {}
     
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
     
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
     
@@ -83,6 +88,14 @@ public class MpesaTransaction {
     
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+    
+    public String getTransactionType() {
+        return transactionType;
+    }
+    
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
     }
     
     public String getTransAmount() {
@@ -101,22 +114,6 @@ public class MpesaTransaction {
         this.transTime = transTime;
     }
     
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    
-    public String getMpesaReceiptNumber() {
-        return mpesaReceiptNumber;
-    }
-    
-    public void setMpesaReceiptNumber(String mpesaReceiptNumber) {
-        this.mpesaReceiptNumber = mpesaReceiptNumber;
-    }
-    
     public String getBusinessShortcode() {
         return businessShortcode;
     }
@@ -125,44 +122,60 @@ public class MpesaTransaction {
         this.businessShortcode = businessShortcode;
     }
     
-    public String getResultCode() {
-        return resultCode;
+    public String getBillRefNumber() {
+        return billRefNumber;
     }
     
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
+    public void setBillRefNumber(String billRefNumber) {
+        this.billRefNumber = billRefNumber;
     }
     
-    public String getResultDescription() {
-        return resultDescription;
+    public String getInvoiceNumber() {
+        return invoiceNumber;
     }
     
-    public void setResultDescription(String resultDescription) {
-        this.resultDescription = resultDescription;
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
     
-    public String getMerchantRequestId() {
-        return merchantRequestId;
+    public String getMsisdn() {
+        return msisdn;
     }
     
-    public void setMerchantRequestId(String merchantRequestId) {
-        this.merchantRequestId = merchantRequestId;
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
     
-    public String getCheckoutRequestId() {
-        return checkoutRequestId;
+    public String getFirstName() {
+        return firstName;
     }
     
-    public void setCheckoutRequestId(String checkoutRequestId) {
-        this.checkoutRequestId = checkoutRequestId;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
     
-    public String getOrganizationBalance() {
-        return organizationBalance;
+    public String getMiddleName() {
+        return middleName;
     }
     
-    public void setOrganizationBalance(String organizationBalance) {
-        this.organizationBalance = organizationBalance;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+    
+    public String getLastName() {
+        return lastName;
+    }
+    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    
+    public String getOrgAccountBalance() {
+        return orgAccountBalance;
+    }
+    
+    public void setOrgAccountBalance(String orgAccountBalance) {
+        this.orgAccountBalance = orgAccountBalance;
     }
     
     public String getThirdPartyTransId() {

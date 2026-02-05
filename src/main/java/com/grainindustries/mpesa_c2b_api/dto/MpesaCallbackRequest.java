@@ -9,16 +9,17 @@ import java.util.Map;
 public class MpesaCallbackRequest {
     
     private String transactionId;
+    private String transactionType;
     private String transAmount;
     private String transTime;
-    private String phoneNumber;
-    private String mpesaReceiptNumber;
     private String businessShortcode;
-    private String resultCode;
-    private String resultDescription;
-    private String merchantRequestId;
-    private String checkoutRequestId;
-    private String organizationBalance;
+    private String billRefNumber;
+    private String invoiceNumber;
+    private String msisdn;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String orgAccountBalance;
     private String thirdPartyTransId;
     
     private Map<String, Object> additionalFields = new HashMap<>();
@@ -38,6 +39,14 @@ public class MpesaCallbackRequest {
         this.transactionId = transactionId;
     }
     
+    public String getTransactionType() {
+        return transactionType;
+    }
+    
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+    
     public String getTransAmount() {
         return transAmount;
     }
@@ -54,22 +63,6 @@ public class MpesaCallbackRequest {
         this.transTime = transTime;
     }
     
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    
-    public String getMpesaReceiptNumber() {
-        return mpesaReceiptNumber;
-    }
-    
-    public void setMpesaReceiptNumber(String mpesaReceiptNumber) {
-        this.mpesaReceiptNumber = mpesaReceiptNumber;
-    }
-    
     public String getBusinessShortcode() {
         return businessShortcode;
     }
@@ -78,44 +71,60 @@ public class MpesaCallbackRequest {
         this.businessShortcode = businessShortcode;
     }
     
-    public String getResultCode() {
-        return resultCode;
+    public String getBillRefNumber() {
+        return billRefNumber;
     }
     
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
+    public void setBillRefNumber(String billRefNumber) {
+        this.billRefNumber = billRefNumber;
     }
     
-    public String getResultDescription() {
-        return resultDescription;
+    public String getInvoiceNumber() {
+        return invoiceNumber;
     }
     
-    public void setResultDescription(String resultDescription) {
-        this.resultDescription = resultDescription;
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
     
-    public String getMerchantRequestId() {
-        return merchantRequestId;
+    public String getMsisdn() {
+        return msisdn;
     }
     
-    public void setMerchantRequestId(String merchantRequestId) {
-        this.merchantRequestId = merchantRequestId;
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
     
-    public String getCheckoutRequestId() {
-        return checkoutRequestId;
+    public String getFirstName() {
+        return firstName;
     }
     
-    public void setCheckoutRequestId(String checkoutRequestId) {
-        this.checkoutRequestId = checkoutRequestId;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
     
-    public String getOrganizationBalance() {
-        return organizationBalance;
+    public String getMiddleName() {
+        return middleName;
     }
     
-    public void setOrganizationBalance(String organizationBalance) {
-        this.organizationBalance = organizationBalance;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+    
+    public String getLastName() {
+        return lastName;
+    }
+    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    
+    public String getOrgAccountBalance() {
+        return orgAccountBalance;
+    }
+    
+    public void setOrgAccountBalance(String orgAccountBalance) {
+        this.orgAccountBalance = orgAccountBalance;
     }
     
     public String getThirdPartyTransId() {
