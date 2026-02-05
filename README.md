@@ -15,14 +15,13 @@ This REST API enables businesses to:
 
 ```mermaid
 graph TD
-    A["Safaricom Daraja<br/>(Sandbox API)"] -->|Real Callbacks| B["ngrok Tunnel<br/>(Public URL)"]
-    B -->|localhost:8080| C["Spring Boot REST API<br/>(Port 8080)"]
-    C -->|Callback Reception| C
-    C -->|Query Transactions| C
-    C -->|Health Check| C
-    C -->|Admin Endpoints| C
-    C -->|Persist Data| D["PostgreSQL<br/>(mpesa_transactions)"]
-    D -->|Query Results| C
+    A["Safaricom Daraja<br/>(Sandbox API)"] -->|Real Callbacks| B["Spring Boot REST API<br/>(Deployed)"]
+    B -->|Callback Reception| B
+    B -->|Query Transactions| B
+    B -->|Health Check| B
+    B -->|Admin Endpoints| B
+    B -->|Persist Data| C["PostgreSQL<br/>(mpesa_transactions)"]
+    C -->|Query Results| B
 ```
 
 ## Test Suite
@@ -48,7 +47,7 @@ graph TD
 - Java 17+
 - Maven 3.8+
 - PostgreSQL 16+
-- ngrok (for public URL)
+- A publicly accessible domain/server for Daraja callbacks
 
 ### 1. Database Setup
 
@@ -109,9 +108,9 @@ mpesa.confirmation.url=https://your-api-domain-url/api/v1/callback
 # API available at: http://localhost:8080
 ```
 
-### 4. Expose via Public Domain
+### 4. Deploy and Configure
 
-Replace `your-api-domain-url` in configuration with your actual domain/deployment URL. For development, you can use tools like ngrok, Cloudflare Tunnel, or deploy to a cloud provider.
+Deploy the application to your chosen platform and update `your-api-domain-url` in the configuration with your actual domain. The Daraja sandbox will send callbacks to this publicly accessible URL.
 
 ## API Endpoints
 
