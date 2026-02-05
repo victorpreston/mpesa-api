@@ -1,0 +1,148 @@
+{
+  "info": {
+    "name": "M-Pesa C2B API",
+    "description": "Collection for testing M-Pesa C2B REST API with Daraja sandbox integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/c2b/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "c2b", "health"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Register Callback URLs",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"shortCode\": \"600984\",\n  \"confirmationUrl\": \"{{base_url}}/api/v1/callback\",\n  \"validationUrl\": \"{{base_url}}/api/v1/callback\"\n}\n\nNote: Use /api/v1/callback (NOT /api/v1/mpesa/c2b/callback) because Daraja rejects URLs containing 'MPESA'"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/admin/register-urls",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "admin", "register-urls"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Simulate C2B Transaction",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/admin/simulate?commandID=CustomerPayBillOnline&amount=250&phoneNumber=254708374149&billRefNumber=INVOICE001",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "admin", "simulate"],
+          "query": [
+            {
+              "key": "commandID",
+              "value": "CustomerPayBillOnline"
+            },
+            {
+              "key": "amount",
+              "value": "250"
+            },
+            {
+              "key": "phoneNumber",
+              "value": "254708374149"
+            },
+            {
+              "key": "billRefNumber",
+              "value": "INVOICE001"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Transactions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/c2b/all",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "c2b", "all"]
+        }
+      }
+    },
+    {
+      "name": "Get Transaction by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/c2b/transaction/6cfa36cd-806d-465b-8bd4-87fb32e664be",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "c2b", "transaction", "6cfa36cd-806d-465b-8bd4-87fb32e664be"]
+        }
+      }
+    },
+    {
+      "name": "Get Transactions by Phone (MSISDN)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/c2b/msisdn/254708374149",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "c2b", "msisdn", "254708374149"]
+        }
+      }
+    },
+    {
+      "name": "Get Transactions by Shortcode",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/mpesa/c2b/shortcode/600984",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "mpesa", "c2b", "shortcode", "600984"]
+        }
+      }
+    },
+    {
+      "name": "Callback - Receive M-Pesa Transaction",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"TransID\": \"UB5030BU3T\",\n  \"TransAmount\": \"250.00\",\n  \"TransactionType\": \"Pay Bill\",\n  \"BusinessShortCode\": \"600984\",\n  \"BillRefNumber\": \"INVOICE001\",\n  \"MSISDN\": \"254708374149\",\n  \"TransTime\": \"20260205085200\",\n  \"FirstName\": \"John\",\n  \"OrgAccountBalance\": \"19091571.50\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/callback",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "callback"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://your-ngrok-url.ngrok-free.app",
+      "type": "string"
+    }
+  ]
+}
