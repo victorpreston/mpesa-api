@@ -10,6 +10,12 @@ This REST API enables businesses to:
 - **Query transaction history** by phone number, shortcode, or transaction ID
 - **Monitor payment flows** with comprehensive logging and error handling
 
+## API Documentation
+
+**Interactive API Documentation:** [Postman Collection](https://www.postman.com/one-k-professionals/api-studio/example/32756309-c6f78be9-a607-4277-b787-a197a2c51207)
+
+All endpoints are documented and ready to test in Postman. Update the `base_url` variable with your deployment domain.
+
 
 ## Architecture
 
