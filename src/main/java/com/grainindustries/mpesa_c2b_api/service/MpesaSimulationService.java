@@ -3,6 +3,8 @@ package com.grainindustries.mpesa_c2b_api.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaSimulateRequest;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaSimulateResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MpesaSimulationService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MpesaSimulationService.class);
     
     @Autowired
     private RestTemplate restTemplate;
@@ -39,6 +43,9 @@ public class MpesaSimulationService {
                                                       String amount, String phoneNumber, 
                                                       String billRefNumber) {
         try {
+            logger.info("Simulating transaction - CommandID: {}, Amount: {}, Phone: {}", 
+                commandID, amount, phoneNumber);
+            
             validateInput(commandID, amount, phoneNumber);
             
             String accessToken = mpesaAuthService.generateAccessToken();
@@ -58,6 +65,7 @@ public class MpesaSimulationService {
             String requestBody = objectMapper.writeValueAsString(request);
             HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
             
+            logger.debug("Sending simulation request to Daraja");
             ResponseEntity<String> response = restTemplate.postForEntity(
                 simulateUrl,
                 httpEntity,
@@ -69,8 +77,14 @@ public class MpesaSimulationService {
                 DarajaSimulateResponse.class
             );
             
+            logger.info("Simulation response: Code={}, Message={}, ConversationID={}", 
+                simulateResponse.getResponseCode(), 
+                simulateResponse.getResponseDescription(),
+                simulateResponse.getOriginatorConversationID());
+            
             return simulateResponse;
         } catch (Exception e) {
+            logger.error("Failed to simulate transaction", e);
             throw new RuntimeException("Failed to simulate transaction: " + e.getMessage(), e);
         }
     }

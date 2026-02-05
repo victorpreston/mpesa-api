@@ -2,6 +2,8 @@ package com.grainindustries.mpesa_c2b_api.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaTokenResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,6 +17,8 @@ import java.util.Base64;
 
 @Service
 public class MpesaAuthService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MpesaAuthService.class);
     
     @Autowired
     private RestTemplate restTemplate;
@@ -36,10 +40,12 @@ public class MpesaAuthService {
     
     public String generateAccessToken() {
         if (isCachedTokenValid()) {
+            logger.debug("Using cached access token");
             return cachedToken.getAccessToken();
         }
         
         try {
+            logger.info("Generating new access token from Daraja");
             String credentials = consumerKey + ":" + consumerSecret;
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
             
@@ -63,8 +69,12 @@ public class MpesaAuthService {
             this.cachedToken = tokenResponse;
             this.tokenExpiryTime = System.currentTimeMillis() + (tokenResponse.getExpiresIn() * 1000);
             
+            logger.info("Access token generated successfully, expires in {} seconds", 
+                tokenResponse.getExpiresIn());
+            
             return tokenResponse.getAccessToken();
         } catch (Exception e) {
+            logger.error("Failed to generate access token", e);
             throw new RuntimeException("Failed to generate access token: " + e.getMessage(), e);
         }
     }

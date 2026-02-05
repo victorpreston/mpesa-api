@@ -3,6 +3,8 @@ package com.grainindustries.mpesa_c2b_api.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaRegisterUrlRequest;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaRegisterUrlResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MpesaUrlRegistrationService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MpesaUrlRegistrationService.class);
     
     @Autowired
     private RestTemplate restTemplate;
@@ -41,6 +45,7 @@ public class MpesaUrlRegistrationService {
     
     public DarajaRegisterUrlResponse registerCallbackUrls() {
         try {
+            logger.info("Registering callback URLs for shortcode: {}", shortCode);
             String accessToken = mpesaAuthService.generateAccessToken();
             
             DarajaRegisterUrlRequest request = new DarajaRegisterUrlRequest(
@@ -57,6 +62,7 @@ public class MpesaUrlRegistrationService {
             String requestBody = objectMapper.writeValueAsString(request);
             HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
             
+            logger.debug("Sending URL registration request to Daraja");
             ResponseEntity<String> response = restTemplate.postForEntity(
                 registerUrl,
                 httpEntity,
@@ -68,8 +74,12 @@ public class MpesaUrlRegistrationService {
                 DarajaRegisterUrlResponse.class
             );
             
+            logger.info("URL registration response: Code={}, Message={}", 
+                urlResponse.getResponseCode(), urlResponse.getResponseDescription());
+            
             return urlResponse;
         } catch (Exception e) {
+            logger.error("Failed to register callback URLs", e);
             throw new RuntimeException("Failed to register callback URLs: " + e.getMessage(), e);
         }
     }
