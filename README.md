@@ -60,18 +60,23 @@ graph TD
 
 ## Getting Started
 
-### 🐳 Docker Setup (Database Only)
+### 🐳 Docker Setup (Recommended)
+
+**Docker runs both PostgreSQL and the Spring Boot app.**
 
 ```bash
-# Start PostgreSQL
+# Start database and app
 docker-compose up -d
 
-# Run migrations (in GIL-database-service repo)
+# Wait for services to start, then run migrations (in GIL-database-service repo)
 npx knex migrate:latest
 
-# Start the app
-.\mvnw.cmd spring-boot:run
+# App is now running at http://localhost:8080
 ```
+
+**Services:**
+- PostgreSQL: localhost:5432
+- M-Pesa API: http://localhost:8080
 
 ---
 

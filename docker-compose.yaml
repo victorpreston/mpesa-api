@@ -8,18 +8,46 @@ services:
     env_file:
       - docker/.env
     environment:
-      POSTGRES_DB: mpesa_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${MPESA_DB_NAME}
+      POSTGRES_USER: ${MPESA_DB_USER}
+      POSTGRES_PASSWORD: ${MPESA_DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${MPESA_DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${MPESA_DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mpesa-network
+
+  # Spring Boot M-Pesa API
+  mpesa-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: mpesa-api
+    env_file:
+      - docker/.env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${MPESA_DB_HOST}:5432/${MPESA_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${MPESA_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MPESA_DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mpesa-network
+    restart: unless-stopped
+
+networks:
+  mpesa-network:
+    driver: bridge
 
 volumes:
   postgres_data:
