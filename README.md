@@ -1,5 +1,14 @@
 # M-Pesa C2B REST API
 
+<table>
+<tr>
+<td width="40%">
+
+![alt text](schema.png)
+
+</td>
+<td width="60%">
+
 A  **Customer-to-Business (C2B) REST API** for M-Pesa payments, fully integrated with **Safaricom Daraja sandbox**. M-Pesa transaction callback handling
 
 ## Project Overview
@@ -15,6 +24,10 @@ This REST API enables businesses to:
 **Interactive API Documentation:** [Postman Collection](https://www.postman.com/one-k-professionals/api-studio/example/32756309-c6f78be9-a607-4277-b787-a197a2c51207)
 
 All endpoints are documented and ready to test in Postman. Update the `base_url` variable with your deployment domain.
+
+</td>
+</tr>
+</table>
 
 
 ## Architecture
