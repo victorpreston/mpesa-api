@@ -60,7 +60,24 @@ graph TD
 
 ## Getting Started
 
-### Prerequisites
+### 🐳 Docker Setup (Database Only)
+
+```bash
+# Start PostgreSQL
+docker-compose up -d
+
+# Run migrations (in GIL-database-service repo)
+npx knex migrate:latest
+
+# Start the app
+.\mvnw.cmd spring-boot:run
+```
+
+---
+
+### Manual Setup
+
+#### Prerequisites
 - Java 17+
 - Maven 3.8+
 - PostgreSQL 16+
