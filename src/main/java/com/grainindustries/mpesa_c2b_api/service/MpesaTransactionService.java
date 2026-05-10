@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,15 @@ public class MpesaTransactionService {
         try {
             logger.info("Processing C2B callback for transaction: {}", 
                 request.getTransactionId());
+
+            if (!hasRequiredTransactionFields(request)) {
+                logger.warn("Rejected incomplete C2B callback payload");
+                return new MpesaCallbackResponse(
+                        "1",
+                        "Invalid Request",
+                        "Required C2B transaction fields are missing"
+                );
+            }
             
             if (request.getTransactionId() != null && 
                 mpesaTransactionRepository.findByTransactionId(request.getTransactionId()).isPresent()) {
@@ -57,6 +67,14 @@ public class MpesaTransactionService {
                 "Failed to process transaction: " + e.getMessage()
             );
         }
+    }
+
+    private boolean hasRequiredTransactionFields(MpesaCallbackRequest request) {
+        return StringUtils.hasText(request.getTransactionId())
+                && StringUtils.hasText(request.getTransAmount())
+                && StringUtils.hasText(request.getTransTime())
+                && StringUtils.hasText(request.getBusinessShortcode())
+                && StringUtils.hasText(request.getMsisdn());
     }
     
     private MpesaTransaction mapRequestToEntity(MpesaCallbackRequest request, String rawPayload) {
