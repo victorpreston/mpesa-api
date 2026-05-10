@@ -1,14 +1,19 @@
 package com.grainindustries.mpesa_c2b_api.controller;
 
+import com.grainindustries.mpesa_c2b_api.dto.DarajaApiResponse;
+import com.grainindustries.mpesa_c2b_api.sdk.DarajaSdk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,8 +30,16 @@ class MpesaAdminControllerIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @MockitoBean
+    private DarajaSdk darajaSdk;
+
     @BeforeEach
     void setUp() {
+        DarajaApiResponse response = new DarajaApiResponse();
+        response.setResponseCode("0");
+        response.setResponseDescription("Accepted");
+        when(darajaSdk.registerC2bUrls(any())).thenReturn(response);
+        when(darajaSdk.simulateC2b(any())).thenReturn(response);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
