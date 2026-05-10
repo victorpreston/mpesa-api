@@ -1,92 +1,56 @@
 package com.grainindustries.mpesa_c2b_api.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grainindustries.mpesa_c2b_api.dto.DarajaApiResponse;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaSimulateRequest;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaSimulateResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.grainindustries.mpesa_c2b_api.dto.requests.C2bSimulationCommand;
+import com.grainindustries.mpesa_c2b_api.sdk.DarajaSdk;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
 
 @Service
 public class MpesaSimulationService {
-    
-    private static final Logger logger = LoggerFactory.getLogger(MpesaSimulationService.class);
-    
-    @Autowired
-    private RestTemplate restTemplate;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
-    
-    @Autowired
-    private MpesaAuthService mpesaAuthService;
-    
-    @Value("${mpesa.shortcode}")
-    private String defaultShortCode;
-    
-    @Value("${mpesa.simulate.url}")
-    private String simulateUrl;
-    
+
+    private final DarajaSdk darajaSdk;
+    private final com.grainindustries.mpesa_c2b_api.config.DarajaProperties properties;
+
+    public MpesaSimulationService(DarajaSdk darajaSdk, com.grainindustries.mpesa_c2b_api.config.DarajaProperties properties) {
+        this.darajaSdk = darajaSdk;
+        this.properties = properties;
+    }
+
     public DarajaSimulateResponse simulateTransaction(String commandID, String amount, 
                                                       String phoneNumber, String billRefNumber) {
-        return simulateTransaction(defaultShortCode, commandID, amount, phoneNumber, billRefNumber);
+        return simulateTransaction(properties.getShortcode(), commandID, amount, phoneNumber, billRefNumber);
     }
     
     public DarajaSimulateResponse simulateTransaction(String shortCode, String commandID, 
                                                       String amount, String phoneNumber, 
                                                       String billRefNumber) {
-        try {
-            logger.info("Simulating transaction - CommandID: {}, Amount: {}, Phone: {}", 
-                commandID, amount, phoneNumber);
-            
-            validateInput(commandID, amount, phoneNumber);
-            
-            String accessToken = mpesaAuthService.generateAccessToken();
-            
-            DarajaSimulateRequest request = new DarajaSimulateRequest(
+        validateInput(commandID, amount, phoneNumber);
+        DarajaApiResponse response = simulateTransaction(new DarajaSimulateRequest(
                 shortCode,
                 commandID,
                 amount,
                 phoneNumber,
                 billRefNumber != null ? billRefNumber : ""
-            );
-            
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + accessToken);
-            
-            String requestBody = objectMapper.writeValueAsString(request);
-            HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
-            
-            logger.debug("Sending simulation request to Daraja");
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                simulateUrl,
-                httpEntity,
-                String.class
-            );
-            
-            DarajaSimulateResponse simulateResponse = objectMapper.readValue(
-                response.getBody(),
-                DarajaSimulateResponse.class
-            );
-            
-            logger.info("Simulation response: Code={}, Message={}, ConversationID={}", 
-                simulateResponse.getResponseCode(), 
-                simulateResponse.getResponseDescription(),
-                simulateResponse.getOriginatorConversationID());
-            
-            return simulateResponse;
-        } catch (Exception e) {
-            logger.error("Failed to simulate transaction", e);
-            throw new RuntimeException("Failed to simulate transaction: " + e.getMessage(), e);
-        }
+        ));
+        return new DarajaSimulateResponse(
+                response.getOriginatorConversationId(),
+                response.getResponseCode(),
+                response.getResponseDescription()
+        );
+    }
+
+    public DarajaApiResponse simulateTransaction(DarajaSimulateRequest request) {
+        return darajaSdk.simulateC2b(new C2bSimulationCommand(
+                request.getShortCode(),
+                request.getCommandID(),
+                new BigDecimal(request.getAmount()),
+                request.getMsisdn(),
+                request.getBillRefNumber()
+        ));
     }
     
     private void validateInput(String commandID, String amount, String phoneNumber) {
