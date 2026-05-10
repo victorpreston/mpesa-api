@@ -1,43 +1,56 @@
 package com.grainindustries.mpesa_c2b_api.service;
 
-import com.grainindustries.mpesa_c2b_api.exception.DarajaApiException;
+import com.grainindustries.mpesa_c2b_api.config.DarajaProperties;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.RestClient;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-@SpringBootTest
-@ActiveProfiles("dev")
 class MpesaAuthServiceSimpleTest {
 
-    @Autowired
-    private MpesaAuthService authService;
-
     @Test
-    void testGenerateAccessToken_ReturnsToken() {
-        try {
-            String token = authService.generateAccessToken();
-            assertNotNull(token);
-            assertTrue(token.length() > 0);
-        } catch (DarajaApiException e) {
-            /* Expected if Daraja credentials are invalid/unreachable */
-            assertTrue(true, "Daraja API exception expected in test environment");
-        }
+    void generateAccessTokenReturnsToken() {
+        RestClient.Builder builder = RestClient.builder();
+        MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
+        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties());
+
+        server.expect(requestTo("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"))
+                .andExpect(method(org.springframework.http.HttpMethod.GET))
+                .andExpect(header("Authorization", "Basic dGVzdC1rZXk6dGVzdC1zZWNyZXQ="))
+                .andRespond(withSuccess("{\"access_token\":\"sandbox-token\",\"expires_in\":3600}", MediaType.APPLICATION_JSON));
+
+        String token = authService.generateAccessToken();
+
+        assertNotNull(token);
+        assertEquals("sandbox-token", token);
+        server.verify();
     }
 
     @Test
-    void testGenerateAccessToken_CachesToken() {
-        try {
-            String token1 = authService.generateAccessToken();
-            String token2 = authService.generateAccessToken();
-            assertEquals(token1, token2, "Tokens should be the same within cache duration");
-        } catch (DarajaApiException e) {
-            /* Expected if Daraja credentials are invalid/unreachable */
-            assertTrue(true, "Daraja API exception expected in test environment");
-        }
+    void generateAccessTokenCachesToken() {
+        RestClient.Builder builder = RestClient.builder();
+        MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
+        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties());
+
+        server.expect(requestTo("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"))
+                .andRespond(withSuccess("{\"access_token\":\"cached-token\",\"expires_in\":3600}", MediaType.APPLICATION_JSON));
+
+        assertEquals("cached-token", authService.generateAccessToken());
+        assertEquals("cached-token", authService.generateAccessToken());
+        server.verify();
+    }
+
+    private DarajaProperties properties() {
+        DarajaProperties properties = new DarajaProperties();
+        properties.setConsumerKey("test-key");
+        properties.setConsumerSecret("test-secret");
+        return properties;
     }
 }

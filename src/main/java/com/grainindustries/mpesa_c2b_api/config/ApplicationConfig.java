@@ -2,11 +2,13 @@ package com.grainindustries.mpesa_c2b_api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Configuration
+@EnableConfigurationProperties(DarajaProperties.class)
 public class ApplicationConfig {
     
     @Bean
@@ -17,8 +19,7 @@ public class ApplicationConfig {
     }
     
     @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+    public RestClient restClient() {
+        return RestClient.create();
     }
 }
