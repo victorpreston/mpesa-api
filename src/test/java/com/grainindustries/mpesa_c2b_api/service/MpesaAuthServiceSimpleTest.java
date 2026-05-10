@@ -6,6 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
@@ -20,10 +23,12 @@ class MpesaAuthServiceSimpleTest {
         RestClient.Builder builder = RestClient.builder();
         MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
         MpesaAuthService authService = new MpesaAuthService(builder.build(), properties());
+        String expectedAuthorization = "Basic " + Base64.getEncoder()
+                .encodeToString(("test-key" + ":" + "test-secret").getBytes(StandardCharsets.UTF_8));
 
         server.expect(requestTo("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"))
                 .andExpect(method(org.springframework.http.HttpMethod.GET))
-                .andExpect(header("Authorization", "Basic dGVzdC1rZXk6dGVzdC1zZWNyZXQ="))
+                .andExpect(header("Authorization", expectedAuthorization))
                 .andRespond(withSuccess("{\"access_token\":\"sandbox-token\",\"expires_in\":3600}", MediaType.APPLICATION_JSON));
 
         String token = authService.generateAccessToken();
