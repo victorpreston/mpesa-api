@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - dev
+      - uat
+      - master
+      - "feature/**"
+      - "sdk/**"
+  pull_request:
+    branches:
+      - dev
+      - uat
+      - master
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  compile:
+    name: Compile Java
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Compile
+        run: ./mvnw -B -DskipTests compile
+
+  docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: compile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -f docker/Dockerfile -t mpesa-c2b-api:${{ github.sha }} .

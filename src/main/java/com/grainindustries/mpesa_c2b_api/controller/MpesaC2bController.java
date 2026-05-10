@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +28,11 @@ public class MpesaC2bController {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @PostMapping({"/api/v1/mpesa/c2b/callback", "/api/v1/callback"})
+    @PostMapping({
+            "/api/v1/mpesa/c2b/callback",
+            "/api/v1/mpesa/c2b/confirmation",
+            "/api/v1/callback"
+    })
     public ResponseEntity<MpesaCallbackResponse> handleCallback(@RequestBody String payload) {
         try {
             logger.info("Received C2B callback");
@@ -49,6 +54,16 @@ public class MpesaC2bController {
                 .body(new MpesaCallbackResponse("1", "Invalid Request", 
                     "Failed to parse request: " + e.getMessage()));
         }
+    }
+
+    @PostMapping("/api/v1/mpesa/c2b/validation")
+    public ResponseEntity<Map<String, Object>> validatePayment(@RequestBody(required = false) String payload) {
+        logger.info("Accepted C2B validation request");
+        logger.debug("Validation payload: {}", payload);
+        return ResponseEntity.ok(Map.of(
+                "ResultCode", 0,
+                "ResultDesc", "Accepted"
+        ));
     }
     
     @GetMapping("/api/v1/mpesa/c2b/transaction/{transactionId}")

@@ -1,0 +1,29 @@
+name: SDK Package
+
+on:
+  push:
+    branches:
+      - "sdk/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  package:
+    name: Package SDK Candidate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Package without tests
+        run: ./mvnw -B -DskipTests package
