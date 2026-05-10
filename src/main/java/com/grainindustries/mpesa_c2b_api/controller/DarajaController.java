@@ -1,0 +1,93 @@
+package com.grainindustries.mpesa_c2b_api.controller;
+
+import com.grainindustries.mpesa_c2b_api.dto.DarajaApiResponse;
+import com.grainindustries.mpesa_c2b_api.dto.requests.AccountBalanceRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.B2bPaymentRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.B2cPaymentRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.DynamicQrRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.ReversalRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.StkPushQueryRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.StkPushRequest;
+import com.grainindustries.mpesa_c2b_api.dto.requests.TransactionStatusRequest;
+import com.grainindustries.mpesa_c2b_api.sdk.DarajaSdk;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/v1/mpesa")
+@CrossOrigin(origins = "${app.cors.allowed-origins:*}")
+public class DarajaController {
+
+    private final DarajaSdk darajaSdk;
+
+    public DarajaController(DarajaSdk darajaSdk) {
+        this.darajaSdk = darajaSdk;
+    }
+
+    @PostMapping("/stk-push")
+    public ResponseEntity<DarajaApiResponse> stkPush(@Valid @RequestBody StkPushRequest request) {
+        return ResponseEntity.ok(darajaSdk.stkPush(request));
+    }
+
+    @PostMapping("/stk-push/query")
+    public ResponseEntity<DarajaApiResponse> queryStkPush(@Valid @RequestBody StkPushQueryRequest request) {
+        return ResponseEntity.ok(darajaSdk.queryStkPush(request));
+    }
+
+    @PostMapping("/b2c/payment")
+    public ResponseEntity<DarajaApiResponse> b2c(@Valid @RequestBody B2cPaymentRequest request) {
+        return ResponseEntity.ok(darajaSdk.b2c(request));
+    }
+
+    @PostMapping("/b2b/payment")
+    public ResponseEntity<DarajaApiResponse> b2b(@Valid @RequestBody B2bPaymentRequest request) {
+        return ResponseEntity.ok(darajaSdk.b2b(request));
+    }
+
+    @PostMapping("/transactions/status")
+    public ResponseEntity<DarajaApiResponse> transactionStatus(@Valid @RequestBody TransactionStatusRequest request) {
+        return ResponseEntity.ok(darajaSdk.transactionStatus(request));
+    }
+
+    @PostMapping("/account-balance")
+    public ResponseEntity<DarajaApiResponse> accountBalance(@Valid @RequestBody AccountBalanceRequest request) {
+        return ResponseEntity.ok(darajaSdk.accountBalance(request));
+    }
+
+    @PostMapping("/reversal")
+    public ResponseEntity<DarajaApiResponse> reverse(@Valid @RequestBody ReversalRequest request) {
+        return ResponseEntity.ok(darajaSdk.reverse(request));
+    }
+
+    @PostMapping("/dynamic-qr")
+    public ResponseEntity<DarajaApiResponse> dynamicQr(@Valid @RequestBody DynamicQrRequest request) {
+        return ResponseEntity.ok(darajaSdk.dynamicQr(request));
+    }
+
+    @PostMapping("/bill-manager/invoices/single")
+    public ResponseEntity<DarajaApiResponse> createSingleBill(@RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(darajaSdk.createSingleBill(request));
+    }
+
+    @PostMapping("/bill-manager/invoices/bulk")
+    public ResponseEntity<DarajaApiResponse> createBulkBills(@RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(darajaSdk.createBulkBills(request));
+    }
+
+    @PostMapping("/bill-manager/invoices/cancel")
+    public ResponseEntity<DarajaApiResponse> cancelBill(@RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(darajaSdk.cancelBill(request));
+    }
+
+    @PostMapping("/bill-manager/reconciliation")
+    public ResponseEntity<DarajaApiResponse> reconcileBill(@RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(darajaSdk.reconcileBill(request));
+    }
+}

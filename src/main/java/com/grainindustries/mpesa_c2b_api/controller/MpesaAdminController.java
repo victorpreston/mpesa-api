@@ -2,8 +2,12 @@ package com.grainindustries.mpesa_c2b_api.controller;
 
 import com.grainindustries.mpesa_c2b_api.dto.DarajaRegisterUrlResponse;
 import com.grainindustries.mpesa_c2b_api.dto.DarajaSimulateResponse;
+import com.grainindustries.mpesa_c2b_api.dto.requests.C2bRegistrationCommand;
+import com.grainindustries.mpesa_c2b_api.dto.requests.C2bSimulationCommand;
+import com.grainindustries.mpesa_c2b_api.sdk.DarajaSdk;
 import com.grainindustries.mpesa_c2b_api.service.MpesaUrlRegistrationService;
 import com.grainindustries.mpesa_c2b_api.service.MpesaSimulationService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,9 @@ public class MpesaAdminController {
     
     @Autowired
     private MpesaSimulationService simulationService;
+
+    @Autowired
+    private DarajaSdk darajaSdk;
     
     @PostMapping("/register-urls")
     public ResponseEntity<?> registerCallbackUrls() {
@@ -87,5 +94,15 @@ public class MpesaAdminController {
                     "Failed to simulate transaction: " + e.getMessage()
                 ));
         }
+    }
+
+    @PostMapping("/register-urls/json")
+    public ResponseEntity<?> registerCallbackUrlsJson(@RequestBody C2bRegistrationCommand request) {
+        return ResponseEntity.ok(darajaSdk.registerC2bUrls(request));
+    }
+
+    @PostMapping("/simulate/json")
+    public ResponseEntity<?> simulateTransactionJson(@Valid @RequestBody C2bSimulationCommand request) {
+        return ResponseEntity.ok(darajaSdk.simulateC2b(request));
     }
 }
