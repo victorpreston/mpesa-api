@@ -1,7 +1,7 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.controller;
 
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaApiResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

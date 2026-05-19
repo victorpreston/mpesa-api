@@ -1,6 +1,7 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
+import com.mpesa_daraja_api.mpesa_daraja_api.service.auth.MpesaAuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
