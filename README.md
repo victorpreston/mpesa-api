@@ -8,19 +8,16 @@ A production-ready Spring Boot backend for Safaricom's M-Pesa Daraja APIs. Cover
 [![Tests](https://img.shields.io/badge/Tests-42%20passing-success)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
----
 
 ## Architecture
 
 ![Architecture Overview](docs/architecture.png)
 
----
 
 ## System Flow & Schema
 
 ![System Flow and Database Schema](docs/achitecture-flow.png)
 
----
 
 ## API Endpoints
 
@@ -68,7 +65,6 @@ A production-ready Spring Boot backend for Safaricom's M-Pesa Daraja APIs. Cover
 | `GET` | `/api/v1/mpesa/c2b/shortcode/{shortcode}` | By business shortcode |
 | `GET` | `/api/v1/mpesa/c2b/health` | Health check |
 
----
 
 ## Getting Started
 
@@ -131,7 +127,6 @@ App runs at `http://localhost:8080`. PostgreSQL at `localhost:5432`.
 ./mvnw spring-boot:run -Dspring.profiles.active=dev
 ```
 
----
 
 ## SDK Layer
 
@@ -159,8 +154,6 @@ DarajaApiResponse response = darajaSdk.stkPush(new StkPushRequest(
 ));
 ```
 
----
-
 ## Project Structure
 
 ```
@@ -186,8 +179,6 @@ src/main/java/com/mpesa_daraja_api/mpesa_daraja_api/
     └── sdk/          DarajaSdkService
 ```
 
----
-
 ## Tests
 
 **42 tests — 100% pass rate**
@@ -208,8 +199,6 @@ src/main/java/com/mpesa_daraja_api/mpesa_daraja_api/
 ./mvnw test -Dspring.profiles.active=test
 ```
 
----
-
 ## CI/CD
 
 | Workflow | Trigger | Environment |
@@ -219,8 +208,6 @@ src/main/java/com/mpesa_daraja_api/mpesa_daraja_api/
 | `prod.yaml` | Push to `master` | Production |
 
 Each workflow runs the full test suite, builds a Docker image, and pushes to Docker Hub.
-
----
 
 ## Tech Stack
 
@@ -236,8 +223,6 @@ Each workflow runs the full test suite, builds a Docker image, and pushes to Doc
 | Build | Maven | 3.8+ |
 | Containers | Docker + Compose | — |
 | CI | GitHub Actions | — |
-
----
 
 ## License
 
