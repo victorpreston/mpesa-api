@@ -2,7 +2,8 @@ package com.mpesa_daraja_api.mpesa_daraja_api.sdk;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
 import com.mpesa_daraja_api.mpesa_daraja_api.exception.DarajaApiException;
-import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaAuthService;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaClient;
+import com.mpesa_daraja_api.mpesa_daraja_api.service.auth.MpesaAuthService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
