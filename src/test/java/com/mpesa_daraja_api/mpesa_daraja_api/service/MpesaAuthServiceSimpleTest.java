@@ -7,6 +7,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,7 @@ class MpesaAuthServiceSimpleTest {
     void generateAccessTokenReturnsToken() {
         RestClient.Builder builder = RestClient.builder();
         MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
-        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties());
+        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties(), Clock.systemUTC());
         String expectedAuthorization = "Basic " + Base64.getEncoder()
                 .encodeToString(("test-key" + ":" + "test-secret").getBytes(StandardCharsets.UTF_8));
 
@@ -42,7 +43,7 @@ class MpesaAuthServiceSimpleTest {
     void generateAccessTokenCachesToken() {
         RestClient.Builder builder = RestClient.builder();
         MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
-        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties());
+        MpesaAuthService authService = new MpesaAuthService(builder.build(), properties(), Clock.systemUTC());
 
         server.expect(requestTo("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"))
                 .andRespond(withSuccess("{\"access_token\":\"cached-token\",\"expires_in\":3600}", MediaType.APPLICATION_JSON));

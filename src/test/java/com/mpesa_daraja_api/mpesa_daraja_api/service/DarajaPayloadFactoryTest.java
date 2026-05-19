@@ -5,6 +5,7 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.StkPushRequest;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +18,7 @@ class DarajaPayloadFactoryTest {
         properties.setLipaNaMpesaShortcode("174379");
         properties.setPasskey("passkey");
         properties.setCallbackUrl("https://example.com/stk");
-        DarajaPayloadFactory factory = new DarajaPayloadFactory(properties);
+        DarajaPayloadFactory factory = new DarajaPayloadFactory(properties, Clock.systemDefaultZone());
 
         var payload = factory.stkPush(new StkPushRequest(
                 "254700000000",

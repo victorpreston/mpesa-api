@@ -5,9 +5,9 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.entity.MpesaTransaction;
 import com.mpesa_daraja_api.mpesa_daraja_api.repository.MpesaTransactionRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -17,15 +17,13 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MpesaTransactionService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MpesaTransactionService.class);
-    
-    @Autowired
-    private MpesaTransactionRepository mpesaTransactionRepository;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
+
+    private final MpesaTransactionRepository mpesaTransactionRepository;
+    private final ObjectMapper objectMapper;
     
     public MpesaCallbackResponse processCallback(MpesaCallbackRequest request, String rawPayload) {
         try {

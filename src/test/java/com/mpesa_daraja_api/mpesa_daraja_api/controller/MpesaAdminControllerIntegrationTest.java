@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests endpoint accessibility and input validation
  */
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class MpesaAdminControllerIntegrationTest {
 
     private MockMvc mockMvc;

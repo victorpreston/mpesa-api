@@ -14,7 +14,6 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.StkPushRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.TransactionStatusRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,12 +31,7 @@ public class DarajaPayloadFactory {
     private final DarajaProperties properties;
     private final Clock clock;
 
-    @Autowired
-    public DarajaPayloadFactory(DarajaProperties properties) {
-        this(properties, Clock.systemDefaultZone());
-    }
-
-    DarajaPayloadFactory(DarajaProperties properties, Clock clock) {
+    public DarajaPayloadFactory(DarajaProperties properties, Clock clock) {
         this.properties = properties;
         this.clock = clock;
     }
