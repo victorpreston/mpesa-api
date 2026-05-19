@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.service;
+package com.mpesa_daraja_api.mpesa_daraja_api.service.c2b;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackRequest;
@@ -24,46 +24,30 @@ public class MpesaTransactionService {
 
     private final MpesaTransactionRepository mpesaTransactionRepository;
     private final ObjectMapper objectMapper;
-    
+
     public MpesaCallbackResponse processCallback(MpesaCallbackRequest request, String rawPayload) {
         try {
-            logger.info("Processing C2B callback for transaction: {}", 
-                request.getTransactionId());
+            logger.info("Processing C2B callback for transaction: {}", request.getTransactionId());
 
             if (!hasRequiredTransactionFields(request)) {
                 logger.warn("Rejected incomplete C2B callback payload");
-                return new MpesaCallbackResponse(
-                        "1",
-                        "Invalid Request",
-                        "Required C2B transaction fields are missing"
-                );
+                return new MpesaCallbackResponse("1", "Invalid Request", "Required C2B transaction fields are missing");
             }
-            
-            if (request.getTransactionId() != null && 
+
+            if (request.getTransactionId() != null &&
                 mpesaTransactionRepository.findByTransactionId(request.getTransactionId()).isPresent()) {
                 logger.warn("Duplicate transaction detected: {}", request.getTransactionId());
-                return new MpesaCallbackResponse("0", "Transaction Already Exists", 
-                    "Duplicate transaction detected");
+                return new MpesaCallbackResponse("0", "Transaction Already Exists", "Duplicate transaction detected");
             }
-            
+
             MpesaTransaction transaction = mapRequestToEntity(request, rawPayload);
             MpesaTransaction savedTransaction = mpesaTransactionRepository.save(transaction);
-            
+
             logger.info("Transaction saved successfully with ID: {}", savedTransaction.getId());
-            
-            return new MpesaCallbackResponse(
-                "0",
-                "Success",
-                "Transaction captured successfully",
-                savedTransaction.getId()
-            );
+            return new MpesaCallbackResponse("0", "Success", "Transaction captured successfully", savedTransaction.getId());
         } catch (Exception e) {
             logger.error("Error processing transaction callback", e);
-            return new MpesaCallbackResponse(
-                "1",
-                "Error",
-                "Failed to process transaction: " + e.getMessage()
-            );
+            return new MpesaCallbackResponse("1", "Error", "Failed to process transaction: " + e.getMessage());
         }
     }
 
@@ -74,10 +58,9 @@ public class MpesaTransactionService {
                 && StringUtils.hasText(request.getBusinessShortcode())
                 && StringUtils.hasText(request.getMsisdn());
     }
-    
+
     private MpesaTransaction mapRequestToEntity(MpesaCallbackRequest request, String rawPayload) {
         MpesaTransaction transaction = new MpesaTransaction();
-        
         transaction.setTransactionId(request.getTransactionId());
         transaction.setTransactionType(request.getTransactionType());
         transaction.setTransAmount(request.getTransAmount());
@@ -92,27 +75,22 @@ public class MpesaTransactionService {
         transaction.setOrgAccountBalance(request.getOrgAccountBalance());
         transaction.setThirdPartyTransId(request.getThirdPartyTransId());
         transaction.setRawPayload(rawPayload);
-        
         return transaction;
     }
-    
+
     public Optional<MpesaTransaction> getTransactionById(String transactionId) {
-        logger.debug("Fetching transaction by ID: {}", transactionId);
         return mpesaTransactionRepository.findByTransactionId(transactionId);
     }
-    
+
     public List<MpesaTransaction> getTransactionsByPhoneNumber(String msisdn) {
-        logger.debug("Fetching transactions for phone number: {}", msisdn);
         return mpesaTransactionRepository.findByMsisdn(msisdn);
     }
-    
+
     public List<MpesaTransaction> getTransactionsByBusinessShortcode(String shortcode) {
-        logger.debug("Fetching transactions for shortcode: {}", shortcode);
         return mpesaTransactionRepository.findByBusinessShortcode(shortcode);
     }
-    
+
     public List<MpesaTransaction> getAllTransactions() {
-        logger.debug("Fetching all transactions");
         return mpesaTransactionRepository.findAll();
     }
 }

@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.service;
+package com.mpesa_daraja_api.mpesa_daraja_api.service.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;

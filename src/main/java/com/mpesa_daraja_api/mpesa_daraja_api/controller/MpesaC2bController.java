@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.entity.MpesaTransaction;
-import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaTransactionService;
+import com.mpesa_daraja_api.mpesa_daraja_api.service.c2b.MpesaTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
