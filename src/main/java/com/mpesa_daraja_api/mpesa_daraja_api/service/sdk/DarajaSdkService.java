@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.service;
+package com.mpesa_daraja_api.mpesa_daraja_api.service.sdk;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.AccountBalanceRequest;
