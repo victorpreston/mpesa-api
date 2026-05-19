@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests endpoint accessibility and integration with the service layer
  */
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class MpesaC2bControllerIntegrationTest {
 
     private MockMvc mockMvc;
