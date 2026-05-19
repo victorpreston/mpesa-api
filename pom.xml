@@ -8,11 +8,11 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.grainindustries</groupId>
-	<artifactId>mpesa-c2b-api</artifactId>
+	<groupId>com.mpesa_daraja_api</groupId>
+	<artifactId>mpesa-daraja-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mpesa-c2b-api</name>
-	<description>REST API for handling M-Pesa C2B transaction callbacks</description>
+	<name>mpesa-daraja-api</name>
+	<description>REST API for M-Pesa Daraja APIs (C2B, B2C, B2B, STK Push, and more)</description>
 	<url/>
 	<licenses>
 		<license/>
