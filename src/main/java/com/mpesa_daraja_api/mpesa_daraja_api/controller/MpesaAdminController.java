@@ -1,9 +1,8 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.controller;
 
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bRegistrationCommand;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bSimulationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.c2b.MpesaUrlRegistrationService;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.c2b.MpesaSimulationService;
@@ -31,7 +30,7 @@ public class MpesaAdminController {
     public ResponseEntity<?> registerCallbackUrls() {
         try {
             logger.info("Registering callback URLs");
-            DarajaRegisterUrlResponse response = urlRegistrationService.registerCallbackUrls();
+            DarajaApiResponse response = urlRegistrationService.registerCallbackUrls();
 
             if ("0".equals(response.getResponseCode())) {
                 logger.info("URLs registered successfully");
@@ -43,11 +42,7 @@ public class MpesaAdminController {
         } catch (Exception e) {
             logger.error("Error registering callback URLs", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new DarajaRegisterUrlResponse(
-                    null,
-                    "1",
-                    "Failed to register URLs: " + e.getMessage()
-                ));
+                .body(errorResponse("Failed to register URLs: " + e.getMessage()));
         }
     }
 
@@ -59,7 +54,7 @@ public class MpesaAdminController {
             @RequestParam(required = false) String billRefNumber) {
         try {
             logger.info("Simulating transaction - CommandID: {}, Phone: {}", commandID, phoneNumber);
-            DarajaSimulateResponse response = simulationService.simulateTransaction(
+            DarajaApiResponse response = simulationService.simulateTransaction(
                 commandID,
                 amount,
                 phoneNumber,
@@ -76,20 +71,19 @@ public class MpesaAdminController {
         } catch (IllegalArgumentException e) {
             logger.warn("Validation error in simulation request: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new DarajaSimulateResponse(
-                    null,
-                    "1",
-                    "Validation error: " + e.getMessage()
-                ));
+                .body(errorResponse("Validation error: " + e.getMessage()));
         } catch (Exception e) {
             logger.error("Error simulating transaction", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new DarajaSimulateResponse(
-                    null,
-                    "1",
-                    "Failed to simulate transaction: " + e.getMessage()
-                ));
+                .body(errorResponse("Failed to simulate transaction: " + e.getMessage()));
         }
+    }
+
+    private DarajaApiResponse errorResponse(String description) {
+        DarajaApiResponse r = new DarajaApiResponse();
+        r.setResponseCode("1");
+        r.setResponseDescription(description);
+        return r;
     }
 
     @PostMapping("/register-urls/json")

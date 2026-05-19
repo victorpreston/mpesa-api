@@ -1,8 +1,6 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service.c2b;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bSimulationCommand;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
@@ -21,36 +19,21 @@ public class MpesaSimulationService {
         this.properties = properties;
     }
 
-    public DarajaSimulateResponse simulateTransaction(String commandID, String amount,
-                                                      String phoneNumber, String billRefNumber) {
+    public DarajaApiResponse simulateTransaction(String commandID, String amount,
+                                                 String phoneNumber, String billRefNumber) {
         return simulateTransaction(properties.getShortcode(), commandID, amount, phoneNumber, billRefNumber);
     }
 
-    public DarajaSimulateResponse simulateTransaction(String shortCode, String commandID,
-                                                      String amount, String phoneNumber,
-                                                      String billRefNumber) {
+    public DarajaApiResponse simulateTransaction(String shortCode, String commandID,
+                                                 String amount, String phoneNumber,
+                                                 String billRefNumber) {
         validateInput(commandID, amount, phoneNumber);
-        DarajaApiResponse response = simulateTransaction(new DarajaSimulateRequest(
+        return darajaSdk.simulateC2b(new C2bSimulationCommand(
                 shortCode,
                 commandID,
-                amount,
+                new BigDecimal(amount),
                 phoneNumber,
                 billRefNumber != null ? billRefNumber : ""
-        ));
-        return new DarajaSimulateResponse(
-                response.getOriginatorConversationId(),
-                response.getResponseCode(),
-                response.getResponseDescription()
-        );
-    }
-
-    public DarajaApiResponse simulateTransaction(DarajaSimulateRequest request) {
-        return darajaSdk.simulateC2b(new C2bSimulationCommand(
-                request.getShortCode(),
-                request.getCommandID(),
-                new BigDecimal(request.getAmount()),
-                request.getMsisdn(),
-                request.getBillRefNumber()
         ));
     }
 
