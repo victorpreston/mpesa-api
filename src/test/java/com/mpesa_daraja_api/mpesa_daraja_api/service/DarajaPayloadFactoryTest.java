@@ -1,7 +1,7 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.StkPushRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushRequest;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

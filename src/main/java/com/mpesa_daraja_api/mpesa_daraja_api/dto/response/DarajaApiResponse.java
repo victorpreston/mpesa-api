@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.dto;
+package com.mpesa_daraja_api.mpesa_daraja_api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;

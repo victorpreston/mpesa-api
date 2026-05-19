@@ -1,7 +1,7 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackResponse;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.entity.MpesaTransaction;
 import com.mpesa_daraja_api.mpesa_daraja_api.repository.MpesaTransactionRepository;
 import org.junit.jupiter.api.BeforeEach;

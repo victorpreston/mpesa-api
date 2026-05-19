@@ -1,8 +1,8 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackResponse;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.entity.MpesaTransaction;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaTransactionService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class MpesaC2bController {
 
     private final MpesaTransactionService mpesaTransactionService;
     private final ObjectMapper objectMapper;
-    
+
     @PostMapping({
             "/api/v1/mpesa/c2b/callback",
             "/api/v1/mpesa/c2b/confirmation",
@@ -35,10 +35,10 @@ public class MpesaC2bController {
         try {
             logger.info("Received C2B callback");
             logger.debug("Callback payload: {}", payload);
-            
+
             MpesaCallbackRequest request = objectMapper.readValue(payload, MpesaCallbackRequest.class);
             MpesaCallbackResponse response = mpesaTransactionService.processCallback(request, payload);
-            
+
             if ("0".equals(response.getResultCode())) {
                 logger.info("Callback processed successfully");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -49,7 +49,7 @@ public class MpesaC2bController {
         } catch (Exception e) {
             logger.error("Error processing callback", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new MpesaCallbackResponse("1", "Invalid Request", 
+                .body(new MpesaCallbackResponse("1", "Invalid Request",
                     "Failed to parse request: " + e.getMessage()));
         }
     }
@@ -63,64 +63,48 @@ public class MpesaC2bController {
                 "ResultDesc", "Accepted"
         ));
     }
-    
+
     @GetMapping("/api/v1/mpesa/c2b/transaction/{transactionId}")
     public ResponseEntity<?> getTransaction(@PathVariable String transactionId) {
         logger.debug("Fetching transaction: {}", transactionId);
         Optional<MpesaTransaction> transaction = mpesaTransactionService.getTransactionById(transactionId);
-        
+
         if (transaction.isPresent()) {
-            logger.debug("Transaction found: {}", transactionId);
             return ResponseEntity.ok(transaction.get());
         } else {
             logger.warn("Transaction not found: {}", transactionId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new MpesaCallbackResponse("1", "Not Found", 
-                    "Transaction not found"));
+                .body(new MpesaCallbackResponse("1", "Not Found", "Transaction not found"));
         }
     }
-    
+
     @GetMapping("/api/v1/mpesa/c2b/msisdn/{msisdn}")
     public ResponseEntity<?> getTransactionsByMsisdn(@PathVariable String msisdn) {
-        logger.debug("Fetching transactions for MSISDN: {}", msisdn);
         List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByPhoneNumber(msisdn);
-        
         if (!transactions.isEmpty()) {
             return ResponseEntity.ok(transactions);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new MpesaCallbackResponse("1", "Not Found", 
-                    "No transactions found for this phone number"));
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new MpesaCallbackResponse("1", "Not Found", "No transactions found for this phone number"));
     }
-    
+
     @GetMapping("/api/v1/mpesa/c2b/shortcode/{shortcode}")
     public ResponseEntity<?> getTransactionsByShortcode(@PathVariable String shortcode) {
-        logger.debug("Fetching transactions for shortcode: {}", shortcode);
         List<MpesaTransaction> transactions = mpesaTransactionService.getTransactionsByBusinessShortcode(shortcode);
-        
         if (!transactions.isEmpty()) {
-            logger.debug("Found {} transactions for shortcode: {}", transactions.size(), shortcode);
             return ResponseEntity.ok(transactions);
-        } else {
-            logger.warn("No transactions found for shortcode: {}", shortcode);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new MpesaCallbackResponse("1", "Not Found", 
-                    "No transactions found for this shortcode"));
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new MpesaCallbackResponse("1", "Not Found", "No transactions found for this shortcode"));
     }
-    
+
     @GetMapping("/api/v1/mpesa/c2b/all")
     public ResponseEntity<?> getAllTransactions() {
-        logger.debug("Fetching all transactions");
-        List<MpesaTransaction> transactions = mpesaTransactionService.getAllTransactions();
-        logger.debug("Retrieved {} transactions", transactions.size());
-        return ResponseEntity.ok(transactions);
+        return ResponseEntity.ok(mpesaTransactionService.getAllTransactions());
     }
-    
+
     @GetMapping("/api/v1/mpesa/c2b/health")
     public ResponseEntity<?> health() {
-        logger.debug("Health check requested");
         return ResponseEntity.ok(new MpesaCallbackResponse("0", "OK", "M-Pesa C2B API is running"));
     }
 }

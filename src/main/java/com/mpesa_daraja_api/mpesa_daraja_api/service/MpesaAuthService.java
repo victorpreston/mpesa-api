@@ -1,7 +1,7 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaTokenResponse;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaTokenResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.exception.DarajaApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.Base64;
 
 @Service
 public class MpesaAuthService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MpesaAuthService.class);
 
     private final RestClient restClient;
@@ -74,7 +74,6 @@ public class MpesaAuthService {
         if (cachedToken == null || tokenExpiryTime == null) {
             return false;
         }
-
         return Instant.now(clock).isBefore(tokenExpiryTime.minusSeconds(60));
     }
 

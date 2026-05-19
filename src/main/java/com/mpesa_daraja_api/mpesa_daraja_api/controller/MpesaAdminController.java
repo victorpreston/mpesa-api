@@ -2,8 +2,8 @@ package com.mpesa_daraja_api.mpesa_daraja_api.controller;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.C2bRegistrationCommand;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.C2bSimulationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bRegistrationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bSimulationCommand;
 import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaUrlRegistrationService;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaSimulationService;
@@ -26,13 +26,13 @@ public class MpesaAdminController {
     private final MpesaUrlRegistrationService urlRegistrationService;
     private final MpesaSimulationService simulationService;
     private final DarajaSdk darajaSdk;
-    
+
     @PostMapping("/register-urls")
     public ResponseEntity<?> registerCallbackUrls() {
         try {
             logger.info("Registering callback URLs");
             DarajaRegisterUrlResponse response = urlRegistrationService.registerCallbackUrls();
-            
+
             if ("0".equals(response.getResponseCode())) {
                 logger.info("URLs registered successfully");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -50,7 +50,7 @@ public class MpesaAdminController {
                 ));
         }
     }
-    
+
     @PostMapping("/simulate")
     public ResponseEntity<?> simulateTransaction(
             @RequestParam String commandID,
@@ -65,7 +65,7 @@ public class MpesaAdminController {
                 phoneNumber,
                 billRefNumber
             );
-            
+
             if ("0".equals(response.getResponseCode())) {
                 logger.info("Transaction simulation successful");
                 return ResponseEntity.status(HttpStatus.OK).body(response);

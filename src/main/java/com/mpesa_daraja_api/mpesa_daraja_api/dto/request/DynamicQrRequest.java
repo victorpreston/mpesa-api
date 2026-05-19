@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.dto.requests;
+package com.mpesa_daraja_api.mpesa_daraja_api.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

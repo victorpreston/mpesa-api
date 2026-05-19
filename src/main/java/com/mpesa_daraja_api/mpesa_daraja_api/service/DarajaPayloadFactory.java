@@ -2,16 +2,16 @@ package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.AccountBalanceRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.B2bPaymentRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.B2cPaymentRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.C2bRegistrationCommand;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.C2bSimulationCommand;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.DynamicQrRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.ReversalRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.StkPushQueryRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.StkPushRequest;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.TransactionStatusRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.AccountBalanceRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.B2bPaymentRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.B2cPaymentRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bRegistrationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bSimulationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.DynamicQrRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.ReversalRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushQueryRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushRequest;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.TransactionStatusRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

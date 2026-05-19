@@ -1,10 +1,10 @@
 package com.mpesa_daraja_api.mpesa_daraja_api.service;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.config.DarajaProperties;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaApiResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.dto.requests.C2bRegistrationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bRegistrationCommand;
+import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
 import org.springframework.stereotype.Service;
 
