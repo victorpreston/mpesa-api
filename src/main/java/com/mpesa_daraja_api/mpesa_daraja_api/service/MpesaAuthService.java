@@ -5,7 +5,6 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaTokenResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.exception.DarajaApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
@@ -29,12 +28,7 @@ public class MpesaAuthService {
     private DarajaTokenResponse cachedToken;
     private Instant tokenExpiryTime;
 
-    @Autowired
-    public MpesaAuthService(RestClient restClient, DarajaProperties properties) {
-        this(restClient, properties, Clock.systemUTC());
-    }
-
-    MpesaAuthService(RestClient restClient, DarajaProperties properties, Clock clock) {
+    public MpesaAuthService(RestClient restClient, DarajaProperties properties, Clock clock) {
         this.restClient = restClient;
         this.properties = properties;
         this.clock = clock;

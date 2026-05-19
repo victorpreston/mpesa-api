@@ -5,9 +5,9 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.MpesaCallbackResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.entity.MpesaTransaction;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaTransactionService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +18,13 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class MpesaC2bController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MpesaC2bController.class);
-    
-    @Autowired
-    private MpesaTransactionService mpesaTransactionService;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
+
+    private final MpesaTransactionService mpesaTransactionService;
+    private final ObjectMapper objectMapper;
     
     @PostMapping({
             "/api/v1/mpesa/c2b/callback",

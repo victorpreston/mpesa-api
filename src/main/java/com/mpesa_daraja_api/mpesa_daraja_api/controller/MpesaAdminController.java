@@ -8,9 +8,9 @@ import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaUrlRegistrationService;
 import com.mpesa_daraja_api.mpesa_daraja_api.service.MpesaSimulationService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +18,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/mpesa/admin")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class MpesaAdminController {
-    
-    private static final Logger logger = LoggerFactory.getLogger(MpesaAdminController.class);
-    
-    @Autowired
-    private MpesaUrlRegistrationService urlRegistrationService;
-    
-    @Autowired
-    private MpesaSimulationService simulationService;
 
-    @Autowired
-    private DarajaSdk darajaSdk;
+    private static final Logger logger = LoggerFactory.getLogger(MpesaAdminController.class);
+
+    private final MpesaUrlRegistrationService urlRegistrationService;
+    private final MpesaSimulationService simulationService;
+    private final DarajaSdk darajaSdk;
     
     @PostMapping("/register-urls")
     public ResponseEntity<?> registerCallbackUrls() {
