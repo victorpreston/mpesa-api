@@ -33,7 +33,7 @@ jobs:
         run: ./mvnw -B -DskipTests compile
 
       - name: Test
-        run: ./mvnw -B -Dspring.profiles.active=dev test
+        run: ./mvnw -B -Dspring.profiles.active=test test
 
   docker-build:
     name: Docker Build
