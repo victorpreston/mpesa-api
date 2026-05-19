@@ -12,12 +12,6 @@ A production-ready Spring Boot backend for Safaricom's M-Pesa Daraja APIs. Cover
 
 ## Architecture
 
-The API is split into two distinct flows.
-
-**Outbound** — your application calls this API, which authenticates with Daraja, builds the correct payload, and returns the result synchronously. Your application owns the persistence for these operations.
-
-**Inbound** — Safaricom posts C2B callbacks to this API. These are received, deduplicated, validated, and persisted to PostgreSQL. Async results from STK, B2C, B2B, and other operations are received, logged, and acknowledged.
-
 ```mermaid
 graph TD
     subgraph Clients
@@ -304,14 +298,6 @@ Each workflow runs the full test suite, builds a Docker image, and pushes to Doc
 | Build | Maven | 3.8+ |
 | Containers | Docker + Compose | — |
 | CI | GitHub Actions | — |
-
----
-
-## Postman Collection
-
-All endpoints documented with example payloads and environment variables:
-
-[Open in Postman](https://www.postman.com/one-k-professionals/api-studio/example/32756309-c6f78be9-a607-4277-b787-a197a2c51207)
 
 ---
 
