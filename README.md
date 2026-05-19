@@ -1,269 +1,229 @@
-# M-Pesa C2B REST API
+# M-Pesa Daraja API
 
-<table>
-<tr>
-<td width="40%">
+A production-ready Spring Boot backend for Safaricom's M-Pesa Daraja APIs. Covers the full integration surface — STK Push, C2B, B2C, B2B, Transaction Status, Account Balance, Reversals, Dynamic QR, and Bill Manager — with a clean SDK layer, PostgreSQL persistence for C2B callbacks, and Docker support.
 
-![alt text](schema.png)
-
-</td>
-<td width="60%">
-
-A  **Customer-to-Business (C2B) REST API** for M-Pesa payments, fully integrated with **Safaricom Daraja sandbox**. M-Pesa transaction callback handling
-
-## Project Overview
-
-This REST API enables businesses to:
-- **Receive real M-Pesa C2B payment callbacks** from Daraja sandbox
-- **Persist transactions** to PostgreSQL database
-- **Query transaction history** by phone number, shortcode, or transaction ID
-- **Monitor payment flows** with comprehensive logging and error handling
-
-## API Documentation
-
-**Interactive API Documentation:** [Postman Collection](https://www.postman.com/one-k-professionals/api-studio/example/32756309-c6f78be9-a607-4277-b787-a197a2c51207)
-
-All endpoints are documented and ready to test in Postman. Update the `base_url` variable with your deployment domain.
-
-</td>
-</tr>
-</table>
+[![Java](https://img.shields.io/badge/Java-21-orange)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-brightgreen)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)](https://www.postgresql.org/)
+[![Tests](https://img.shields.io/badge/Tests-42%20passing-success)]()
+[![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
 
 ## Architecture
 
-```mermaid
-graph TD
-    A["Safaricom Daraja<br/>(Sandbox API)"] -->|Real M-Pesa Callbacks| B["Spring Boot REST API<br/>(Deployed)"]
-    D["Admin Client<br/>(Internal)"] -->|Register URLs / Simulate| B
-    E["Query Client<br/>(External)"] -->|Query Transactions| B
-    B -->|Persist Data| C["PostgreSQL<br/>(mpesa_transactions)"]
-    C -->|Query Results| B
-```
+![Architecture Overview](docs/architecture.png)
 
-## Test Suite
 
-**Total Tests: 24** | **Pass Rate: 100%**
+## System Flow & Schema
 
-| Test Class | Tests | Status |
-|-----------|-------|--------|
-| MpesaAdminControllerIntegrationTest | 5 | Pass |
-| MpesaC2bControllerIntegrationTest | 6 |  Pass |
-| MpesaC2bApiApplicationTests | 1 |  Pass |
-| MpesaAuthServiceSimpleTest | 2 |  Pass |
-| MpesaTransactionServiceTest | 10 |  Pass |
+![System Flow and Database Schema](docs/achitecture-flow.png)
 
-**Run tests:**
-```bash
-.\mvnw.cmd test
-```
+
+## API Endpoints
+
+### Outbound — you call these
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/mpesa/stk-push` | Trigger payment prompt on customer phone |
+| `POST` | `/api/v1/mpesa/stk-push/query` | Check STK push status |
+| `POST` | `/api/v1/mpesa/b2c/payment` | Send money to a customer |
+| `POST` | `/api/v1/mpesa/b2b/payment` | Pay another business |
+| `POST` | `/api/v1/mpesa/transactions/status` | Query a transaction |
+| `POST` | `/api/v1/mpesa/account-balance` | Check business account balance |
+| `POST` | `/api/v1/mpesa/reversal` | Reverse a transaction |
+| `POST` | `/api/v1/mpesa/dynamic-qr` | Generate a payment QR code |
+| `POST` | `/api/v1/mpesa/bill-manager/invoices/single` | Create a single invoice |
+| `POST` | `/api/v1/mpesa/bill-manager/invoices/bulk` | Create bulk invoices |
+| `POST` | `/api/v1/mpesa/bill-manager/invoices/cancel` | Cancel an invoice |
+| `POST` | `/api/v1/mpesa/bill-manager/reconciliation` | Reconcile billing |
+
+### Admin
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/mpesa/admin/register-urls` | Register your callback URLs with Daraja |
+| `POST` | `/api/v1/mpesa/admin/simulate` | Simulate a C2B payment (sandbox only) |
+
+### Inbound — Safaricom calls these
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/mpesa/c2b/confirmation` | C2B payment confirmation (persisted) |
+| `POST` | `/api/v1/mpesa/c2b/validation` | C2B payment validation |
+| `POST` | `/api/v1/mpesa/results/stk` | STK Push async result |
+| `POST` | `/api/v1/mpesa/results` | B2C / B2B / Reversal / Status / Balance result |
+| `POST` | `/api/v1/mpesa/results/timeout` | Queue timeout notification |
+
+### Transaction Queries
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/mpesa/c2b/all` | All C2B transactions |
+| `GET` | `/api/v1/mpesa/c2b/transaction/{transactionId}` | By Safaricom transaction ID |
+| `GET` | `/api/v1/mpesa/c2b/msisdn/{msisdn}` | By customer phone number |
+| `GET` | `/api/v1/mpesa/c2b/shortcode/{shortcode}` | By business shortcode |
+| `GET` | `/api/v1/mpesa/c2b/health` | Health check |
+
 
 ## Getting Started
 
-### 🐳 Docker Setup (Recommended)
+### Prerequisites
 
-**Docker runs both PostgreSQL and the Spring Boot app.**
+- Java 21+
+- Docker & Docker Compose, or PostgreSQL 16+ running locally
+- A Safaricom Daraja account — [register here](https://developer.safaricom.co.ke/)
+- A publicly accessible HTTPS URL for Daraja callbacks — use [ngrok](https://ngrok.com/) locally
+
+### 1. Clone
 
 ```bash
-# Start database and app
-docker-compose up -d
-
-# Wait for services to start, then run migrations (in GIL-database-service repo)
-npx knex migrate:latest
-
-# App is now running at http://localhost:8080
+git clone https://github.com/victorpreston/mpesa-api.git
+cd mpesa-api
 ```
 
-**Services:**
-- PostgreSQL: localhost:5432
-- M-Pesa API: http://localhost:8080
+### 2. Configure
 
----
+Create `src/main/resources/application-dev.properties`:
 
-### Manual Setup
-
-#### Prerequisites
-- Java 17+
-- Maven 3.8+
-- PostgreSQL 16+
-- A publicly accessible domain/server for Daraja callbacks
-
-### 1. Database Setup
-
-This project uses **PostgreSQL 16** with migrations managed through a separate database service repository.
-
-**Database migrations and setup are handled by:**
-[GIL Database Service](https://github.com/victorpreston/GIL-database-service)
-
-**To set up the database:**
-
-1. Clone the database service repository:
-```bash
-git clone https://github.com/victorpreston/GIL-database-service.git
-cd GIL-database-service
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Run migrations:
-```bash
-npx knex migrate:latest
-```
-
-4. To rollback migrations:
-```bash
-npx knex migrate:rollback
-```
-
-The `mpesa_db` database will be created with all required tables and schemas for the M-Pesa C2B API.
-
-### 2. Configuration
 ```properties
 # Database
 spring.datasource.url=jdbc:postgresql://localhost:5432/mpesa_db
 spring.datasource.username=postgres
 spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
 
-# Daraja Credentials 
-mpesa.consumer.key=YOUR_CONSUMER_KEY
-mpesa.consumer.secret=YOUR_CONSUMER_SECRET
+# Daraja credentials (from developer.safaricom.co.ke)
+mpesa.consumer-key=YOUR_CONSUMER_KEY
+mpesa.consumer-secret=YOUR_CONSUMER_SECRET
+
+# Business shortcode
 mpesa.shortcode=600984
+mpesa.lipa-na-mpesa-shortcode=174379
+mpesa.passkey=YOUR_LIPA_NA_MPESA_PASSKEY
 
-# Callback URL
-mpesa.confirmation.url=https://your-api-domain-url/api/v1/callback
+# Callback URLs (must be publicly accessible HTTPS)
+mpesa.confirmation-url=https://your-domain.com/api/v1/mpesa/c2b/confirmation
+mpesa.validation-url=https://your-domain.com/api/v1/mpesa/c2b/validation
+mpesa.callback-url=https://your-domain.com/api/v1/mpesa/results/stk
+mpesa.result-url=https://your-domain.com/api/v1/mpesa/results
+mpesa.timeout-url=https://your-domain.com/api/v1/mpesa/results/timeout
+
+# sandbox or production
+mpesa.environment=sandbox
 ```
 
-### 3. Run Application
+### 3. Run with Docker
+
 ```bash
-# Build
-.\mvnw.cmd clean package -DskipTests
-
-# Run
-.\mvnw.cmd spring-boot:run
-
-# API available at: http://localhost:8080
+docker-compose up -d
 ```
 
-### 4. Deploy and Configure
+App runs at `http://localhost:8080`. PostgreSQL at `localhost:5432`.
 
-Deploy the application to your chosen platform and update `your-api-domain-url` in the configuration with your actual domain. The Daraja sandbox will send callbacks to this publicly accessible URL.
+### 4. Run manually
 
-## API Endpoints
-
-### Callback Endpoint (Daraja sends transactions here)
-```
-POST /api/v1/callback
-POST /api/v1/mpesa/c2b/callback
-```
-**Example Daraja callback payload:**
-```json
-{
-  "TransID": "UB5030BU3T",
-  "TransAmount": "250.00",
-  "TransactionType": "Pay Bill",
-  "BusinessShortCode": "600984",
-  "BillRefNumber": "INVOICE001",
-  "MSISDN": "254708374149",
-  "TransTime": "20260205085200",
-  "FirstName": "John",
-  "OrgAccountBalance": "19091571.50"
-}
+```bash
+./mvnw spring-boot:run -Dspring.profiles.active=dev
 ```
 
-**Response:**
-```json
-{
-  "message": "Transaction captured successfully",
-  "resultCode": "0",
-  "resultDescription": "Success",
-  "transactionId": "6cfa36cd-806d-465b-8bd4-87fb32e664be",
-  "timestamp": 1770270843022
-}
+
+## SDK Layer
+
+The `DarajaSdk` interface is the single entry point for all Daraja operations. Authentication, payload construction, and HTTP are handled internally — inject the interface and call the method.
+
+```
+DarajaSdk  ──▶  DarajaSdkService
+                    ├── DarajaPayloadFactory   builds Safaricom-compliant request bodies
+                    ├── DefaultDarajaClient    executes authenticated HTTPS calls
+                    └── MpesaAuthService       fetches and caches the OAuth token
 ```
 
-### Query Endpoints
+**Example:**
 
-**Get all transactions:**
-```
-GET /api/v1/mpesa/c2b/all
-```
+```java
+@Autowired
+DarajaSdk darajaSdk;
 
-**Get by transaction ID:**
-```
-GET /api/v1/mpesa/c2b/transaction/{transactionId}
-```
-
-**Get by phone number:**
-```
-GET /api/v1/mpesa/c2b/msisdn/{msisdn}
+DarajaApiResponse response = darajaSdk.stkPush(new StkPushRequest(
+    "254712345678",
+    new BigDecimal("500"),
+    "ORDER-001",
+    "Payment for order",
+    null, null, null
+));
 ```
 
-**Get by business shortcode:**
-```
-GET /api/v1/mpesa/c2b/shortcode/{shortcode}
-```
+## Project Structure
 
-**Health check:**
 ```
-GET /api/v1/mpesa/c2b/health
-```
-
-### Admin Endpoints
-
-**Register callback URLs with Daraja:**
-```
-POST /api/v1/mpesa/admin/register-urls
-Content-Type: application/json
-
-{
-  "shortCode": "600984",
-  "confirmationUrl": "https://your-api-domain-url/api/v1/callback",
-  "validationUrl": "https://your-api-domain-url/api/v1/callback"
-}
-```
-
-**Simulate C2B transaction from Daraja:**
-```
-POST /api/v1/mpesa/admin/simulate
-Content-Type: application/json
-
-{
-  "shortCode": "600984",
-  "commandID": "CustomerPayBillOnline",
-  "amount": "250",
-  "msisdn": "254708374149",
-  "billRefNumber": "INVOICE001"
-}
+src/main/java/com/mpesa_daraja_api/mpesa_daraja_api/
+├── config/           DarajaProperties, ApplicationConfig (RestClient, Clock, ObjectMapper)
+├── controller/
+│   ├── callback/     C2bCallbackController, ResultCallbackController
+│   ├── DarajaController.java
+│   └── MpesaAdminController.java
+├── dto/
+│   ├── request/      StkPushRequest, B2cPaymentRequest, B2bPaymentRequest, ...
+│   └── response/     DarajaApiResponse, AsyncCallbackResult, MpesaCallbackRequest, ...
+├── entity/           MpesaTransaction
+├── enums/            CommandId, IdentifierType, TransactionStatus, Environment
+├── exception/        DarajaApiException, GlobalExceptionHandler
+├── interfaces/       DarajaSdk, DarajaClient
+├── repository/       MpesaTransactionRepository
+├── sdk/              DefaultDarajaClient
+└── service/
+    ├── auth/         MpesaAuthService
+    ├── c2b/          MpesaTransactionService, MpesaUrlRegistrationService, MpesaSimulationService
+    ├── payload/      DarajaPayloadFactory
+    └── sdk/          DarajaSdkService
 ```
 
-These admin endpoints enable testing of the callback registration and transaction simulation flows directly from your API.
+## Tests
 
+**42 tests — 100% pass rate**
 
-### Step 3: Verify Callback
-Check application logs:
+| Test Class | Tests | What it covers |
+|-----------|-------|----------------|
+| `MpesaTransactionServiceTest` | 10 | Persistence, deduplication, queries |
+| `MpesaSimulationServiceTest` | 9 | Input validation for CommandID, amount, phone |
+| `DefaultDarajaClientTest` | 4 | Auth header, URL resolution, error handling |
+| `ResultCallbackControllerIntegrationTest` | 4 | STK, async result, timeout endpoints |
+| `MpesaAdminControllerIntegrationTest` | 5 | Admin endpoint accessibility |
+| `MpesaC2bControllerIntegrationTest` | 6 | C2B callback and query endpoints |
+| `MpesaAuthServiceSimpleTest` | 2 | Token fetch and caching |
+| `DarajaPayloadFactoryTest` | 1 | STK payload construction |
+| `MpesaDarajaApiApplicationTests` | 1 | Spring context loads |
+
+```bash
+./mvnw test -Dspring.profiles.active=test
 ```
-[INFO] Received C2B callback
-[INFO] Processing C2B callback for transaction: UB5030BU3T
-[INFO] Transaction saved successfully with ID: 6cfa36cd-806d-465b-8bd4-87fb32e664be
-[INFO] Callback processed successfully
-```
 
-Query database:
-```
-GET http://localhost:8080/api/v1/mpesa/c2b/all
-```
+## CI/CD
 
-## Key Technologies
+| Workflow | Trigger | Environment |
+|----------|---------|-------------|
+| `dev.yaml` | Push to `dev` | Development |
+| `uat.yaml` | Push to `uat` | UAT |
+| `prod.yaml` | Push to `master` | Production |
 
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| **Framework** | Spring Boot | 4.0.2 |
-| **ORM** | Hibernate JPA | 7.2.1 |
-| **Database** | PostgreSQL | 16.3 |
-| **Testing** | JUnit 5 | Jupiter |
-| **Build** | Maven | 3.8+ |
-| **Java** | Java SE | 17+ |
-| **HTTP Client** | RestTemplate | Spring |
+Each workflow runs the full test suite, builds a Docker image, and pushes to Docker Hub.
+
+## Tech Stack
+
+| | Technology | Version |
+|--|-----------|---------|
+| Language | Java | 21 |
+| Framework | Spring Boot | 4.0.6 |
+| ORM | Spring Data JPA / Hibernate | 7.x |
+| Database | PostgreSQL | 16 |
+| HTTP Client | Spring RestClient | 6.x |
+| Validation | Jakarta Validation | 3.x |
+| Testing | JUnit 5 + Mockito | Jupiter |
+| Build | Maven | 3.8+ |
+| Containers | Docker + Compose | — |
+| CI | GitHub Actions | — |
+
+## License
+
+MIT
