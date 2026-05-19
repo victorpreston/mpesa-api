@@ -12,75 +12,13 @@ A production-ready Spring Boot backend for Safaricom's M-Pesa Daraja APIs. Cover
 
 ## Architecture
 
-```mermaid
-graph TD
-    subgraph Clients
-        APP["Your Application"]
-        ADMIN["Admin / DevOps"]
-    end
-
-    subgraph API Layer
-        OUT["Outbound Controllers\nDarajaController\nMpesaAdminController"]
-        IN["Inbound Controllers\nC2bCallbackController\nResultCallbackController"]
-    end
-
-    subgraph SDK Layer
-        SDK["DarajaSdk"]
-        FACTORY["DarajaPayloadFactory"]
-        CLIENT["DefaultDarajaClient"]
-        AUTH["MpesaAuthService\n(token cache)"]
-    end
-
-    subgraph Storage
-        DB[("PostgreSQL\nmpesa_transactions")]
-    end
-
-    subgraph Safaricom
-        DARAJA["Daraja API"]
-    end
-
-    APP -->|"STK Push, B2C, B2B..."| OUT
-    ADMIN -->|"Register URLs, Simulate"| OUT
-    OUT --> SDK
-    SDK --> FACTORY
-    SDK --> CLIENT
-    CLIENT --> AUTH
-    CLIENT -->|"HTTPS"| DARAJA
-
-    DARAJA -->|"C2B confirmation\n(persist)"| IN
-    DARAJA -->|"STK / B2C / B2B results\n(acknowledge + log)"| IN
-    IN -->|"C2B only"| DB
-    DB -->|"Query"| OUT
-```
+![Architecture Overview](docs/architecture.png)
 
 ---
 
-## Database Schema
+## System Flow & Schema
 
-Only C2B inbound callbacks are persisted. For outbound operations (STK Push, B2C, B2B, etc.) Safaricom's async results are received and acknowledged — your application holds the transaction context and is responsible for its own persistence.
-
-```mermaid
-erDiagram
-    MPESA_TRANSACTIONS {
-        uuid        id                  PK
-        varchar     transaction_id      UK  "Safaricom TxnID"
-        varchar     transaction_type        "Pay Bill, Buy Goods, etc."
-        varchar     trans_amount
-        varchar     trans_time              "YYYYMMDDHHmmss"
-        varchar     business_shortcode
-        varchar     bill_ref_number         "Account reference"
-        varchar     invoice_number
-        varchar     msisdn                  "Customer phone 254..."
-        varchar     first_name
-        varchar     middle_name
-        varchar     last_name
-        varchar     org_account_balance     "Balance after transaction"
-        varchar     third_party_trans_id
-        text        raw_payload             "Full JSON from Safaricom"
-        timestamp   created_at
-        timestamp   updated_at
-    }
-```
+![System Flow and Database Schema](docs/achitecture-flow.png)
 
 ---
 
