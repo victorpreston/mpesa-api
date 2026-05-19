@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.controller;
+package com.mpesa_daraja_api.mpesa_daraja_api.controller.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.MpesaCallbackRequest;
@@ -19,9 +19,9 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-public class MpesaC2bController {
+public class C2bCallbackController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MpesaC2bController.class);
+    private static final Logger logger = LoggerFactory.getLogger(C2bCallbackController.class);
 
     private final MpesaTransactionService mpesaTransactionService;
     private final ObjectMapper objectMapper;
