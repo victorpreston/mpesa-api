@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MpesaC2bApiApplication {
+public class MpesaDarajaApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MpesaC2bApiApplication.class, args);
+		SpringApplication.run(MpesaDarajaApiApplication.class, args);
 	}
 
 }
