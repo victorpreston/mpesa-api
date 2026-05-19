@@ -9,7 +9,7 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushQueryRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.TransactionStatusRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

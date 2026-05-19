@@ -5,7 +5,7 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaSimulateResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bSimulationCommand;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

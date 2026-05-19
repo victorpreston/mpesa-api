@@ -12,8 +12,8 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushQueryRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.StkPushRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.TransactionStatusRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaClient;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaClient;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

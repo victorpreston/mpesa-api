@@ -5,7 +5,7 @@ import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.DarajaRegisterUrlResponse;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.C2bRegistrationCommand;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.response.DarajaApiResponse;
-import com.mpesa_daraja_api.mpesa_daraja_api.sdk.DarajaSdk;
+import com.mpesa_daraja_api.mpesa_daraja_api.interfaces.DarajaSdk;
 import org.springframework.stereotype.Service;
 
 @Service

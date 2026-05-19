@@ -1,4 +1,4 @@
-package com.mpesa_daraja_api.mpesa_daraja_api.sdk;
+package com.mpesa_daraja_api.mpesa_daraja_api.interfaces;
 
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.AccountBalanceRequest;
 import com.mpesa_daraja_api.mpesa_daraja_api.dto.request.B2bPaymentRequest;
